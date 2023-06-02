@@ -9,7 +9,7 @@
 ![screencapture-127-0-0-1-5500-index-html-2023-06-02-15_06_10](https://github.com/AJ3504/JS-personal-assignment/assets/131579657/364a5894-fc03-4a43-9ac3-4ff3ad868647)
 
 
-##2. 기능 소개
+## 2. 기능 소개
 
 ### 2-1. TMDB API - fetch로 가져와서 전체화면에 나타내기
 
