@@ -1,4 +1,4 @@
-// 1.api요청하는 함수 fetchMovieData()
+// 1.api요청 : 함수 fetchMovieData()
 const fetchMovieData = async () => {
   //
   const options = {
@@ -19,10 +19,50 @@ const fetchMovieData = async () => {
 
   return data.results;
 };
-// fetchMovieData();
-//--------------------------------------------------------------------//
 
-//중복되는 부분 : a()함수
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// 2. 화면에 먼저 전체 목록 보여주기 : 함수 showMovies()
+
+let showMovies = async () => {
+  let movies = await fetchMovieData();
+
+  let movieCard;
+  movies.map((item) => {
+    movieCard = a(item);
+    let cardList = document.querySelector(".card-list");
+    cardList.append(movieCard);
+  });
+};
+showMovies();
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// 3.검색 -> 필터링해서 보여주기 : 함수 sortMovies()
+let sortMovies = async (event) => {
+  event.preventDefault();
+  let movies = await fetchMovieData();
+
+  let cardList = document.querySelector(".card-list");
+  cardList.innerHTML = "";
+
+  //필터링
+  let searchInput = document.querySelector("#searchInput").value;
+  let filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+  console.log(filteredMovies);
+
+  let movieCard;
+  filteredMovies.map((item) => {
+    movieCard = a(item);
+    let cardList = document.querySelector(".card-list");
+    cardList.append(movieCard);
+  });
+
+  a(filteredMovies);
+};
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// 2,3 중복되는 부분 : a()함수
 function a(item) {
   let { poster_path, title, overview, vote_average, id } = item;
 
@@ -67,70 +107,8 @@ function a(item) {
   return movieCard;
 }
 
-// 2. 화면에 먼저 보여주기
-//함수 showMovies
-
-let showMovies = async () => {
-  let movies = await fetchMovieData();
-
-  //방법❶.forEach
-  // let movieCard; //변수를 먼저 선언
-  // movies.forEach((item) => {
-  //   movieCard = a(item); //a()함수의 결과값을 -> 나중에 값 할당
-  //   let cardList = document.querySelector(".card-list");
-  //   cardList.append(movieCard);
-  // });
-
-  // console.log(movieCard);
-
-  //방법❷. map(체이닝기법)
-  let movieCard;
-  movies.map((item) => {
-    movieCard = a(item);
-    let cardList = document.querySelector(".card-list");
-    cardList.append(movieCard);
-  });
-};
-showMovies();
-//--------------------------------------------------------------------//
-
-//3.검색 -> 필터링해서 보여주기
-let sortMovies = async (event) => {
-  event.preventDefault(); //❗️이게 있어야함. 없으면: 검색하고 -> 페이지 새로고침이 돼서 검색한 영화'만' 띄워줄 수가 없음.
-  let movies = await fetchMovieData();
-
-  let cardList = document.querySelector(".card-list");
-  cardList.innerHTML = "";
-
-  //필터링
-  let searchInput = document.querySelector("#searchInput").value;
-  let filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(searchInput.toLowerCase())
-  );
-  console.log(filteredMovies);
-
-  //결과 디스플레이
-  // let movieCard;
-  //방법❶.forEach
-  // filteredMovies.forEach((item) => {
-  //   movieCard = a(item);
-  //   let cardList = document.querySelector(".card-list");
-  //   cardList.innerHTML = "";
-  //   cardList.append(movieCard);
-  // });
-
-  //방법❷. map(체이닝기법)
-  let movieCard;
-  filteredMovies.map((item) => {
-    movieCard = a(item);
-    let cardList = document.querySelector(".card-list");
-    cardList.append(movieCard);
-  });
-
-  a(filteredMovies);
-};
-// sortMovies(); //❗️이게 지금 전역 영역에서 호출되고 있어서 preventDefault에러가 났던 것. 그럴 필요 없는 함수임. 이미 html에서 onclick으로 호출이 되고 있기 때문에. ❗️여기에 sortMovies(event)라고 한다 해도, clickevent가 아니기 때문에 event로서의 의미가 없음.
-
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+//기타기능 : 커서 자동focus
 window.addEventListener("load", function () {
   let searchInput = document.querySelector("#searchInput");
   searchInput.focus();
