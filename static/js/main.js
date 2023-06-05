@@ -11,7 +11,7 @@ const fetchMovieData = async () => {
   };
 
   const response = await fetch(
-    "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=3",
+    "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
     options
   );
 
@@ -22,7 +22,7 @@ const fetchMovieData = async () => {
 // fetchMovieData();
 //--------------------------------------------------------------------//
 
-//중복되는 부분 : 전역으로 선언
+//중복되는 부분 : a()함수
 function a(item) {
   let { poster_path, title, overview, vote_average, id } = item;
 
@@ -69,21 +69,27 @@ function a(item) {
 
 // 2. 화면에 먼저 보여주기
 //함수 showMovies
+
 let showMovies = async () => {
   let movies = await fetchMovieData();
+
+  //방법❶.forEach
+  // let movieCard; //변수를 먼저 선언
+  // movies.forEach((item) => {
+  //   movieCard = a(item); //a()함수의 결과값을 -> 나중에 값 할당
+  //   let cardList = document.querySelector(".card-list");
+  //   cardList.append(movieCard);
+  // });
+
+  // console.log(movieCard);
+
+  //방법❷. map(체이닝기법)
   let movieCard;
-  movies.forEach((item) => {
+  movies.map((item) => {
     movieCard = a(item);
     let cardList = document.querySelector(".card-list");
     cardList.append(movieCard);
   });
-
-  // items.forEach((item) => {
-  //
-  // let movieCard = a(movies);
-  console.log(movieCard);
-
-  //
 };
 showMovies();
 //--------------------------------------------------------------------//
@@ -93,22 +99,34 @@ let sortMovies = async (event) => {
   event.preventDefault(); //❗️이게 있어야함. 없으면: 검색하고 -> 페이지 새로고침이 돼서 검색한 영화'만' 띄워줄 수가 없음.
   let movies = await fetchMovieData();
 
+  let cardList = document.querySelector(".card-list");
+  cardList.innerHTML = "";
+
   //필터링
   let searchInput = document.querySelector("#searchInput").value;
-  let filteredMovies = movies.filter(
-    //얘의 결과물은 배열 -> 그래서 forEach돌린 것임
-    (movie) => movie.title.toLowerCase().includes(searchInput.toLowerCase()) //⭐️{}+return이거나, {}랑 return 같이 없거나
+  let filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchInput.toLowerCase())
   );
-  // ❗️.map(콜백함수); //체이닝기법
+  console.log(filteredMovies);
 
-  //
+  //결과 디스플레이
+  // let movieCard;
+  //방법❶.forEach
+  // filteredMovies.forEach((item) => {
+  //   movieCard = a(item);
+  //   let cardList = document.querySelector(".card-list");
+  //   cardList.innerHTML = "";
+  //   cardList.append(movieCard);
+  // });
+
+  //방법❷. map(체이닝기법)
   let movieCard;
-  filteredMovies.forEach((item) => {
+  filteredMovies.map((item) => {
     movieCard = a(item);
     let cardList = document.querySelector(".card-list");
-    cardList.innerHTML = "";
     cardList.append(movieCard);
   });
+
   a(filteredMovies);
 };
 // sortMovies(); //❗️이게 지금 전역 영역에서 호출되고 있어서 preventDefault에러가 났던 것. 그럴 필요 없는 함수임. 이미 html에서 onclick으로 호출이 되고 있기 때문에. ❗️여기에 sortMovies(event)라고 한다 해도, clickevent가 아니기 때문에 event로서의 의미가 없음.
