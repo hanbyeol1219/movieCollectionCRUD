@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script src="./static/js/review.js" defer></script>
+
+    <title>혼란에 빠졌조의 최고 평점 영화 콜렉션</title>
+  </head>
+
+  <body>
+    <header><h1>혼란에 빠졌조의 최고 평점 영화 콜렉션 👻</h1></header>
+
+    <!-- 테스트용  -->
+    <main>
+      <div id="review-write">
+        <form id="review-form" method="get">
+          <label>테스트용 리뷰 작성 영역</label>
+          <input
+            type="text"
+            id="review-writer"
+            placeholder="작성자명을 입력하세요."
+          />
+          <input
+            name="id"
+            type="text"
+            id="review-writer2"
+            value=""
+            style="display: none"
+          />
+          <textarea
+            id="review-comment"
+            rows="5"
+            cols="50"
+            placeholder="영화에 대한 리뷰를 작성해주세요."
+          ></textarea>
+          <input
+            type="password"
+            id="review-password"
+            placeholder="비밀번호를 입력하세요."
+          />
+          <button type="submit" id="review-register-btn">등록하기</button>
+        </form>
+      </div>
+      <hr />
+      <div id="review-list">
+        <div>
+          <p>작성된 리뷰가 보여지는 영역</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

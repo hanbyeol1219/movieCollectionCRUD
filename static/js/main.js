@@ -37,37 +37,45 @@ showMovies();
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // 3.검색 -> 필터링해서 보여주기 : 함수 sortMovies()
-let sortMovies = async (event) => {
+
+const searchBtn = document.querySelector("#searchButton");
+
+searchBtn.addEventListener("click", (event) => {
   event.preventDefault();
-  let movies = await fetchMovieData();
+  let sortMovies = async () => {
+    let movies = await fetchMovieData();
 
-  let cardList = document.querySelector(".card-list");
-  cardList.innerHTML = "";
-
-  //필터링
-  let searchInput = document.querySelector("#searchInput").value;
-  let filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(searchInput.toLowerCase())
-  );
-  console.log(filteredMovies);
-
-  let movieCard;
-  filteredMovies.map((item) => {
-    movieCard = a(item);
     let cardList = document.querySelector(".card-list");
-    cardList.append(movieCard);
-  });
+    cardList.innerHTML = "";
 
-  a(filteredMovies);
-};
+    //필터링
+    let searchInput = document.querySelector("#searchInput").value;
+    let filteredMovies = movies.filter((movie) =>
+      movie.title.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    console.log(filteredMovies);
+
+    let movieCard;
+    filteredMovies.map((item) => {
+      movieCard = a(item);
+      let cardList = document.querySelector(".card-list");
+      cardList.append(movieCard);
+    });
+
+    a(filteredMovies);
+  };
+  sortMovies();
+});
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // 2,3 중복되는 부분 : a()함수
 function a(item) {
   let { poster_path, title, overview, vote_average, id } = item;
 
-  let movieCard = document.createElement("div");
+  let movieCard = document.createElement("a");
   movieCard.className = "movie-card";
+  movieCard.target = "movie-card";
+  movieCard.href = `review.html?id=${id}`; // 상세p
   movieCard.onclick = function () {
     alert(`ID : ${id}`);
   };
@@ -113,3 +121,87 @@ window.addEventListener("load", function () {
   let searchInput = document.querySelector("#searchInput");
   searchInput.focus();
 });
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// 최근검색어 - 이지영
+const $recentList = document.querySelector("#recentList");
+let keywordArr = JSON.parse(localStorage.getItem("recentkeyword")) || [];
+
+const saveRecentKeyword = () => {
+  let searchInput = document.querySelector("#searchInput");
+  const newKeyword = searchInput.value;
+  const MAXIMUM_SIZE = 5;
+
+  if (newKeyword == "") return loadRecentKeyword();
+
+  let repeatedIndex = keywordArr.indexOf(newKeyword);
+  if (repeatedIndex !== -1) {
+    keywordArr.splice(repeatedIndex, 1);
+  }
+
+  if (keywordArr.length >= MAXIMUM_SIZE) {
+    keywordArr.pop();
+  }
+  keywordArr.unshift(newKeyword);
+  localStorage.setItem("recentkeyword", JSON.stringify(keywordArr));
+
+  loadRecentKeyword();
+};
+
+const delRecentKeyword = (e) => {
+  let targetKeyword = e.target.dataset.keyword;
+  keywordArr = keywordArr.filter((keyword) => keyword !== targetKeyword);
+  localStorage.setItem("recentkeyword", JSON.stringify(keywordArr));
+
+  loadRecentKeyword();
+};
+
+const loadRecentKeyword = () => {
+  $recentList.textContent = "";
+  for (const keyword of keywordArr) {
+    let temp_html = `<li><a href="#" class="keyword_anchor" data-keyword="${keyword}">${keyword}</a><button type="button" class="del_btn" data-keyword="${keyword}" title="삭제">X</button></li>`;
+    $recentList.insertAdjacentHTML("beforeend", temp_html);
+  }
+
+  let $delKeywardBtns = document.querySelectorAll(".del_btn");
+  $delKeywardBtns.forEach((btn) => {
+    btn.addEventListener("click", delRecentKeyword);
+  });
+
+  let $searchKeywordAnchors = document.querySelectorAll(".keyword_anchor");
+  $searchKeywordAnchors.forEach((Anchor) => {
+    Anchor.addEventListener("click", sortMovies);
+  });
+};
+
+loadRecentKeyword();
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// 다크테마 - 이지영
+const $themeText = document.querySelector("#themeBtn b");
+const $themeBtn = document.querySelector("#themeBtn");
+const theme = localStorage.getItem("theme");
+
+const initTheme = () => {
+  if (theme) {
+    $themeText.innerHTML = theme === "dark" ? "ON" : "OFF";
+    document.documentElement.setAttribute("data-theme", theme);
+  }
+};
+
+const toggleTheme = () => {
+  const currentTheme =
+    localStorage.getItem("theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light");
+
+  const newTheme = currentTheme === "dark" ? "light" : "dark";
+  $themeText.innerHTML = newTheme === "dark" ? "ON" : "OFF";
+
+  document.documentElement.setAttribute("data-theme", newTheme);
+  localStorage.setItem("theme", newTheme);
+};
+
+$themeBtn.addEventListener("click", toggleTheme);
+initTheme();
