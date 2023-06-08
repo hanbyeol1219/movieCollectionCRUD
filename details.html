@@ -23,13 +23,6 @@
             id="review-writer"
             placeholder="작성자명을 입력하세요."
           />
-          <input
-            name="id"
-            type="text"
-            id="review-writer2"
-            value=""
-            style="display: none"
-          />
           <textarea
             id="review-comment"
             rows="5"
@@ -48,6 +41,16 @@
       <div id="review-list">
         <div>
           <p>작성된 리뷰가 보여지는 영역</p>
+        </div>
+      </div>
+      <div id="overlay">
+        <div id="modal-box">
+          <input type="text" id="modal-review-writer" />
+          <textarea id="modal-review-comment" rows="5" cols="50"></textarea>
+          <div id="modal-btn-box">
+            <button type="button" id="modal-review-edit-btn">수정</button>
+            <button type="button" id="modal-close-btn">닫기</button>
+          </div>
         </div>
       </div>
     </main>

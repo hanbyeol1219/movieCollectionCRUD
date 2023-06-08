@@ -75,7 +75,7 @@ function a(item) {
   let movieCard = document.createElement("a");
   movieCard.className = "movie-card";
   movieCard.target = "movie-card";
-  movieCard.href = `review.html?id=${id}`; // 상세p
+  movieCard.href = `details.html?id=${id}`; // 상세p
   movieCard.onclick = function () {
     alert(`ID : ${id}`);
   };
